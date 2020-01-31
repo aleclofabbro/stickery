@@ -1,13 +1,14 @@
 import React, { SFC, CSSProperties } from 'react'
+import { Button } from '../basic/Button'
 
 export interface TopBarButton {
   onClick(): unknown
 }
 export const TopBarButton: SFC<TopBarButton> = ({ onClick, children }) => {
   return (
-    <button style={btnStyle} onClick={onClick}>
+    <Button style={btnStyle} onClick={onClick}>
       {children}
-    </button>
+    </Button>
   )
 }
 const btnStyle: CSSProperties = {

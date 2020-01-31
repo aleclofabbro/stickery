@@ -1,6 +1,7 @@
 import React, { SFC } from 'react'
 import { TopBarButton } from '../../elements/top-bar/Button'
 import { Modal } from '../Modal/Modal'
+import { Button } from '../../elements/basic/Button'
 
 export interface SetBgButton {
   isModalOpen: boolean
@@ -19,8 +20,8 @@ export const SetBgButton: SFC<SetBgButton> = ({
     <>
       <TopBarButton onClick={openModal}>Sfondo</TopBarButton>
       {isModalOpen && (
-        <Modal clickOut={closeModal}>
-          <button onClick={importFile}>scegli file</button>
+        <Modal onClickOut={closeModal}>
+          <Button onClick={importFile}>scegli file</Button>
           <br />
           <span>o incolla</span>
         </Modal>

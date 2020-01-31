@@ -5,35 +5,6 @@ export interface Opts {
 }
 
 export const useFileChooser = ({ fileChoosen }: Opts): [() => unknown] => {
-  useEffect(() => {
-    const pasteListener = (pasteEv: ClipboardEvent) => {
-      const data = pasteEv.clipboardData
-      if (!(data && data.files && data.files.length > 0)) {
-        return
-      }
-      const file = data.files[0]
-      fileChoosen(file, 'paste')
-    }
-    document.body.addEventListener('paste', pasteListener)
-    return () => {
-      document.body.removeEventListener('paste', pasteListener)
-    }
-  }, [fileChoosen])
-  useEffect(() => {
-    const dropListener = (dragEv: DragEvent) => {
-      const data = dragEv.dataTransfer
-      if (!(data && data.files.length > 0)) {
-        return
-      }
-      const file = data.files[0]
-      fileChoosen(file, 'paste')
-    }
-    document.body.addEventListener('drop', dropListener)
-    return () => {
-      document.body.removeEventListener('drop', dropListener)
-    }
-  }, [fileChoosen])
-
   const inputRef = useRef<HTMLInputElement | null>(null)
   const chooseFile = useCallback(() => inputRef.current && inputRef.current.click(), [])
   useEffect(() => {
@@ -54,6 +25,36 @@ export const useFileChooser = ({ fileChoosen }: Opts): [() => unknown] => {
       input.removeEventListener('change', changeListener)
       document.body.removeChild(input)
       inputRef.current = null
+    }
+  }, [fileChoosen])
+
+  useEffect(() => {
+    const pasteListener = (pasteEv: ClipboardEvent) => {
+      const data = pasteEv.clipboardData
+      if (!(data && data.files && data.files.length > 0)) {
+        return
+      }
+      const file = data.files[0]
+      fileChoosen(file, 'paste')
+    }
+    document.body.addEventListener('paste', pasteListener)
+    return () => {
+      document.body.removeEventListener('paste', pasteListener)
+    }
+  }, [fileChoosen])
+
+  useEffect(() => {
+    const dropListener = (dragEv: DragEvent) => {
+      const data = dragEv.dataTransfer
+      if (!(data && data.files.length > 0)) {
+        return
+      }
+      const file = data.files[0]
+      fileChoosen(file, 'paste')
+    }
+    document.body.addEventListener('drop', dropListener)
+    return () => {
+      document.body.removeEventListener('drop', dropListener)
     }
   }, [fileChoosen])
 

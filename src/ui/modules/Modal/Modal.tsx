@@ -1,9 +1,9 @@
 import React, { CSSProperties, SFC, useRef, useEffect, useCallback } from 'react'
 
 export interface Modal {
-  clickOut(): unknown
+  onClickOut(): unknown
 }
-export const Modal: SFC<Modal> = ({ clickOut, children }) => {
+export const Modal: SFC<Modal> = ({ onClickOut, children }) => {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (ref.current) {
@@ -20,10 +20,10 @@ export const Modal: SFC<Modal> = ({ clickOut, children }) => {
       if (ev.target !== ev.currentTarget) {
         return
       } else {
-        clickOut()
+        onClickOut()
       }
     },
-    [clickOut]
+    [onClickOut]
   )
   return (
     <div id="modal" ref={ref} style={bgStyle} onClick={bgClick}>
@@ -33,11 +33,11 @@ export const Modal: SFC<Modal> = ({ clickOut, children }) => {
 }
 const modalStyle: CSSProperties = {
   position: 'fixed',
-  left: '20%',
-  top: '20%',
-  right: '20%',
-  bottom: '20%',
-  backgroundColor: 'gray'
+  left: '5%',
+  top: '5%',
+  right: '5%',
+  bottom: '5%',
+  backgroundColor: '#1a1a1a'
 }
 const bgStyle: CSSProperties = {
   position: 'fixed',
@@ -45,5 +45,5 @@ const bgStyle: CSSProperties = {
   top: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(0,0,0,0.5)'
+  backgroundColor: 'rgba(255, 255, 255, 0.7)'
 }
