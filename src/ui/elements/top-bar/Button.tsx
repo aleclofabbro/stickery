@@ -1,7 +1,7 @@
 import React, { SFC, CSSProperties } from 'react'
 
 export interface TopBarButton {
-  onClick(): any
+  onClick(): unknown
 }
 export const TopBarButton: SFC<TopBarButton> = ({ onClick, children }) => {
   return (

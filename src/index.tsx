@@ -1,16 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
+import { App } from './hoc/App'
 // import { defineCustomElements } from '@ionic/pwa-elements/loader'
-import { MainTpl } from './ui/templates/Main'
 // import * as serviceWorker from './serviceWorker'
 
-const mainProps: MainTpl = {
-  TopBar: <div>Top Barrra</div>,
-  Canvas: <canvas>canvas</canvas>
-}
-
-ReactDOM.render(<MainTpl {...mainProps}></MainTpl>, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById('root'))
 
 // defineCustomElements(window)
 

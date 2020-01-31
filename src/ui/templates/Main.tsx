@@ -15,10 +15,9 @@ export const MainTpl: SFC<MainTpl> = ({ Canvas, TopBar }) => {
 const outerStyle: CSSProperties = {
   position: 'fixed',
   left: 0,
-  top: '95%',
+  top: 0,
   right: 0,
-  bottom: 0,
-  backgroundColor: 'dark-gray'
+  bottom: 0
 }
 const topBarStyle: CSSProperties = {
   position: 'fixed',
@@ -26,7 +25,7 @@ const topBarStyle: CSSProperties = {
   top: 0,
   right: 0,
   bottom: '95%',
-  backgroundColor: 'light-gray'
+  backgroundColor: '#262626'
 }
 const canvasStyle: CSSProperties = {
   position: 'fixed',
@@ -34,5 +33,5 @@ const canvasStyle: CSSProperties = {
   top: '5%',
   right: 0,
   bottom: 0,
-  backgroundColor: 'blue'
+  backgroundColor: '#1a1a1a'
 }

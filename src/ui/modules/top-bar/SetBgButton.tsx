@@ -4,19 +4,23 @@ import { Modal } from '../Modal/Modal'
 
 export interface SetBgButton {
   isModalOpen: boolean
-  openModal(): any
-  closeModal(): any
-  chooseFile(): any
-  pasteFile(): any
+  openModal(): unknown
+  closeModal(): unknown
+  importFile(): unknown
 }
 
-export const SetBgButton: SFC<SetBgButton> = ({ closeModal, isModalOpen, openModal }) => {
+export const SetBgButton: SFC<SetBgButton> = ({
+  closeModal,
+  isModalOpen,
+  openModal,
+  importFile
+}) => {
   return (
     <>
       <TopBarButton onClick={openModal}>Sfondo</TopBarButton>
       {isModalOpen && (
-        <Modal close={closeModal}>
-          <button>scegli file</button>
+        <Modal clickOut={closeModal}>
+          <button onClick={importFile}>scegli file</button>
           <br />
           <span>o incolla</span>
         </Modal>
