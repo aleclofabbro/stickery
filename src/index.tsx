@@ -6,7 +6,7 @@ import { MainTpl } from './ui/templates/Main'
 // import * as serviceWorker from './serviceWorker'
 
 const mainProps: MainTpl = {
-  TopBar: <div>Top Bar</div>,
+  TopBar: <div>Top Barrra</div>,
   Canvas: <canvas>canvas</canvas>
 }
 
