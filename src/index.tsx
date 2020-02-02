@@ -2,10 +2,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
 import { App } from './hoc/App'
+import { GlobCtx } from './ctx/globs'
 // import { defineCustomElements } from '@ionic/pwa-elements/loader'
 // import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+  <GlobCtx>
+    <App />
+  </GlobCtx>,
+  document.getElementById('root')
+)
 
 // defineCustomElements(window)
 
