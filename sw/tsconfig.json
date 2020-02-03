@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    //"noEmit": true,
+    "lib": ["es5", "es6", "WebWorker", "esnext"],
+    "module": "ESNext"
+    // "outFile": "../public/sw.js"
+  },
+  "files": ["sw.ts"]
+}
