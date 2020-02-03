@@ -6,7 +6,7 @@ import { importImage } from '../../../srv/importImage'
 import { useProjectState } from '../../../state/project'
 
 export const SetBgButtonHoc: SFC = () => {
-  const [isModalOpen, openModal, closeModal] = useBoolState(false)
+  const { b: isModalOpen, T: openModal, F: closeModal } = useBoolState(false)
   const { dispatch } = useProjectState()
   const getBgFile = useCallback(
     (file: File) => {

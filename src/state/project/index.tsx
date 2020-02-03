@@ -3,7 +3,7 @@ import { PrjReducer, ProjectState, Actions } from './types'
 import { reducer } from './reducer'
 
 const initialState: ProjectState = {
-  background: null
+  background: null // '/_/images/1/xoxo.png'
 }
 export type ProjectStateCtx = { state: ProjectState; dispatch: React.Dispatch<Actions> }
 export const ProjectStateCtx = createContext<ProjectStateCtx>({} as ProjectStateCtx)
