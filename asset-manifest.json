@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/stickery/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/stickery/static/js/main.00877cce.chunk.js",
-    "main.js.map": "/stickery/static/js/main.00877cce.chunk.js.map",
+    "main.js": "/stickery/static/js/main.aa500722.chunk.js",
+    "main.js.map": "/stickery/static/js/main.aa500722.chunk.js.map",
     "runtime-main.js": "/stickery/static/js/runtime-main.b1d48992.js",
     "runtime-main.js.map": "/stickery/static/js/runtime-main.b1d48992.js.map",
     "static/js/2.dff00cd8.chunk.js": "/stickery/static/js/2.dff00cd8.chunk.js",
     "static/js/2.dff00cd8.chunk.js.map": "/stickery/static/js/2.dff00cd8.chunk.js.map",
     "index.html": "/stickery/index.html",
-    "precache-manifest.ba61f23f8213374dea463bb2aa96aa94.js": "/stickery/precache-manifest.ba61f23f8213374dea463bb2aa96aa94.js",
+    "precache-manifest.798c6ea716973cf6b2c71f94c34f4fc4.js": "/stickery/precache-manifest.798c6ea716973cf6b2c71f94c34f4fc4.js",
     "service-worker.js": "/stickery/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/stickery/static/css/main.5ecd60fb.chunk.css.map",
     "static/js/2.dff00cd8.chunk.js.LICENSE": "/stickery/static/js/2.dff00cd8.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.b1d48992.js",
     "static/js/2.dff00cd8.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.00877cce.chunk.js"
+    "static/js/main.aa500722.chunk.js"
   ]
 }
