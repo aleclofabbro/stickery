@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 import { useEffect, useMemo, useState } from 'react'
-import { getImageSrcUrl } from '../importImage'
+import { getImageSrcUrl } from '../../lib/importImage'
 
 export interface ImageData {
   id?: number
