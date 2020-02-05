@@ -11,8 +11,9 @@ export const SetBgButtonHoc: SFC = () => {
   const imageSelected = useCallback(
     (meta: ImageMeta) => {
       dispatch({ t: 'bg', p: meta.src })
+      closeModal()
     },
-    [dispatch]
+    [closeModal, dispatch]
   )
 
   const Gallery = useMemo(() => <ImportedImageGalleryHOC onClickImage={imageSelected} />, [
