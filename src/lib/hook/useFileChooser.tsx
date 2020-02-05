@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 export interface Opts {
-  fileChoosen(file: File, by: 'fs' | 'paste' | 'drop'): unknown
+  onFileChoosen(file: File, by: 'fs' | 'paste' | 'drop'): unknown
 }
 
-export const useFileChooser = ({ fileChoosen }: Opts): [() => unknown] => {
+export const useFileChooser = ({ onFileChoosen: fileChoosen }: Opts): [() => unknown] => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const chooseFile = useCallback(() => inputRef.current && inputRef.current.click(), [])
   useEffect(() => {

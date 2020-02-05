@@ -2,7 +2,7 @@
   "name": "stickery",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://aleclofabbro.github.io/stickery",
+  "homepage": "https://aleclofabbro.github.io/stickery",
   "dependencies": {
     "@capacitor/cli": "^1.4.0",
     "@capacitor/core": "^1.4.0",
@@ -20,6 +20,7 @@
     "fabric": "^4.0.0-beta.5",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-grid-gallery": "^0.5.5",
     "react-scripts": "3.3.0",
     "typescript": "~3.7.2"
   },

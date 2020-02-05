@@ -1,26 +1,30 @@
-import React, { SFC, useCallback } from 'react'
-import { useFileChooser } from '../../../hook/fileChooser'
-import { useBoolState } from '../../../hook/useBoolState'
-import { SetBgButton } from '../../../ui/modules/top-bar/SetBgButton'
-import { importImage } from '../../../srv/importImage'
+import React, { SFC, useCallback, useMemo } from 'react'
+import { useBoolState } from '../../../lib/hook/useBoolState'
+import { ImageMeta } from '../../../srv/db'
 import { useProjectState } from '../../../state/project'
+import { SetBgButton } from '../../../ui/modules/top-bar/SetBgButton'
+import { ImportedImageGalleryHOC } from '../importedImageGallery/ImportedImageGalleryHOC'
 
 export const SetBgButtonHoc: SFC = () => {
-  const { b: isModalOpen, T: openModal, F: closeModal } = useBoolState(false)
   const { dispatch } = useProjectState()
-  const getBgFile = useCallback(
-    (file: File) => {
-      importImage(file).then((url) => dispatch({ t: 'bg', p: url }))
+  const { b: isModalOpen, T: openModal, F: closeModal } = useBoolState(false)
+  const imageSelected = useCallback(
+    (meta: ImageMeta) => {
+      dispatch({ t: 'bg', p: meta.src })
     },
     [dispatch]
   )
-  const [importFile] = useFileChooser({ fileChoosen: getBgFile })
+
+  const Gallery = useMemo(() => <ImportedImageGalleryHOC onClickImage={imageSelected} />, [
+    imageSelected
+  ])
+
   return (
     <SetBgButton
-      importFile={importFile}
       closeModal={closeModal}
       isModalOpen={isModalOpen}
       openModal={openModal}
+      Gallery={Gallery}
     />
   )
 }

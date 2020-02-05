@@ -4,7 +4,6 @@ type S = ProjectState
 
 export const reducer: PrjReducer = (prev, action) => {
   const next = _reducer(prev, action)
-  console.log(next)
   return next
 }
 const _reducer: PrjReducer = (prev, action) => {

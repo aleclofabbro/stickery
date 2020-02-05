@@ -1,10 +1,12 @@
 import React, { CSSProperties, SFC, useRef, useEffect, useCallback } from 'react'
+import { useNavStack } from '../../../lib/hook/useNavStack'
 
 export interface Modal {
   onClickOut(): unknown
 }
 export const Modal: SFC<Modal> = ({ onClickOut, children }) => {
   const ref = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (ref.current) {
       const div = ref.current
@@ -15,16 +17,19 @@ export const Modal: SFC<Modal> = ({ onClickOut, children }) => {
       }
     }
   }, [])
+  const { back } = useNavStack(onClickOut)
   const bgClick = useCallback(
     (ev: React.MouseEvent<HTMLDivElement>) => {
       if (ev.target !== ev.currentTarget) {
         return
       } else {
+        back()
         onClickOut()
       }
     },
-    [onClickOut]
+    [onClickOut, back]
   )
+
   return (
     <div id="modal" ref={ref} style={bgStyle} onClick={bgClick}>
       <div style={modalStyle}>{children}</div>
