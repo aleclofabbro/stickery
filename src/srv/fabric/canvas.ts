@@ -1,59 +1,61 @@
 import { fabric } from 'fabric'
-
-import { useRef, useEffect, useCallback } from 'react'
-
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useProjectState } from '../../state/project'
 
 const canvasOpts: fabric.ICanvasOptions = {
   interactive: true
 }
 
-export interface UseFabricCanvas {
-  ref: React.RefObject<HTMLCanvasElement>
-}
-
-export const useFabricCanvas = ({ ref }: UseFabricCanvas) => {
-  const fabricCanvasRef = useRef<fabric.Canvas>()
-
+let canvas: fabric.Canvas | null = null
+export const useFabricCanvas = () => {
   const { state } = useProjectState()
+  const [bgImage, setBgImage] = useState<fabric.Image>()
+  const resizeCanvas = useCallback(() => {
+    const _canvas = canvas
+    if (!(_canvas && bgImage)) {
+      return
+    }
+
+    const dim = {
+      height: window.innerHeight - 20,
+      width: window.innerWidth
+    }
+    const zoom = Math.min(dim.height / (bgImage.height || 1), dim.width / (bgImage.width || 1))
+
+    _canvas.setDimensions(dim)
+    _canvas.setZoom(zoom)
+    _canvas.renderAll()
+  }, [bgImage])
+  useEffect(() => resizeCanvas(), [bgImage, resizeCanvas])
+
   useEffect(() => {
-    if (!ref.current) {
+    const _canvas = canvas
+    const bg = state.background
+    if (!(_canvas && bg)) {
       return
     }
-    fabricCanvasRef.current = new fabric.Canvas(ref.current, canvasOpts)
-  }, [ref])
-
-  const redrawCanvas = useCallback(() => {
-    const canvas = fabricCanvasRef.current
-    if (!canvas) {
-      return
-    }
-    canvas.setHeight(window.innerHeight - 20)
-    canvas.setWidth(window.innerWidth)
-    if (state.background) {
-      const bg = state.background
-      canvas.setBackgroundImage(bg, () => {
-        fabric.Image.fromURL(bg, (img) => {
-          const zoom = Math.min(
-            canvas.getHeight() / (img.height || 1),
-            canvas.getWidth() / (img.width || 1)
-          )
-          canvas.setZoom(zoom)
-          canvas.renderAll()
-        })
+    fabric.Image.fromURL(bg, (img) => {
+      _canvas.setBackgroundImage(img, () => {
+        setBgImage(img)
       })
-    } else {
-      canvas.renderAll()
-    }
+    })
   }, [state.background])
-
-  useEffect(redrawCanvas, [state.background, redrawCanvas])
 
   useEffect(() => {
     // resize on init
-    window.addEventListener('resize', redrawCanvas, false)
+    window.addEventListener('resize', resizeCanvas, false)
     return () => {
-      window.removeEventListener('resize', redrawCanvas, false)
+      window.removeEventListener('resize', resizeCanvas, false)
     }
-  }, [redrawCanvas])
+  }, [resizeCanvas])
+
+  return useMemo(() => {
+    return {
+      set: (elem: HTMLElement) => {
+        const canvasElem = document.createElement('canvas')
+        elem.appendChild(canvasElem)
+        canvas = new fabric.Canvas(canvasElem, canvasOpts)
+      }
+    }
+  }, [])
 }
