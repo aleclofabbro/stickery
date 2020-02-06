@@ -20,7 +20,7 @@ if (!workbox) {
   //@ts-ignore
   // Precaching.precacheAndRoute(self.__precacheManifest || [])
   // Routing.registerRoute(new RegExp('/.*'), {
-  Routing.registerRoute(new RegExp('/_/images/.*'), {
+  Routing.registerRoute(new RegExp('.*/_/images/.*'), {
     handle: async (req) => {
       // console.log('#####', req.url.pathname)
       const id = Number(req.url.pathname.split('/').reverse()[1])
