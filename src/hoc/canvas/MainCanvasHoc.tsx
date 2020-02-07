@@ -1,17 +1,12 @@
-import React, { CSSProperties, SFC, useRef, useEffect } from 'react'
-import { useFabricCanvas } from '../../srv/fabric/canvas'
+import React, { CSSProperties, SFC } from 'react'
+import { FabricCanvas } from '../../srv/fabric/canvas'
 
 export const MainCanvasHoc: SFC = () => {
-  const ref = useRef<HTMLDivElement>(null)
-  const { set } = useFabricCanvas()
-  useEffect(() => {
-    const div = ref.current
-    if (div) {
-      set(div)
-    }
-  }, [set])
-
-  return <div style={mainCanvasStyle} ref={ref}></div>
+  return (
+    <div style={mainCanvasStyle}>
+      <FabricCanvas></FabricCanvas>
+    </div>
+  )
 }
 
 const mainCanvasStyle: CSSProperties = {

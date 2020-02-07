@@ -1,29 +1,27 @@
 import React, { SFC, useCallback, useMemo } from 'react'
 import { useBoolState } from '../../../lib/hook/useBoolState'
 import { ImageMeta } from '../../../srv/db'
-import { SetBgButton } from '../../../ui/modules/top-bar/SetBgButton'
+import { useProjectState } from '../../../state/project'
+import { AddStickerButton } from '../../../ui/modules/top-bar/AddStickerButton'
 import { ImportedImageGalleryHOC } from '../importedImageGallery/ImportedImageGalleryHOC'
-import { useCanvasCtrl } from '../../../srv/fabric/canvas'
 
-export const SetBgButtonHoc: SFC = () => {
+export const AddStickerButtonHoc: SFC = () => {
+  const { dispatch } = useProjectState()
   const { b: isModalOpen, T: openModal, F: closeModal } = useBoolState(false)
-  const mainCanvasCtrl = useCanvasCtrl()
   const imageSelected = useCallback(
     (meta: ImageMeta) => {
-      if (!mainCanvasCtrl) {
-        return
-      }
-      mainCanvasCtrl.setBackground(meta.src)
+      dispatch({ t: 'bg', p: meta.src })
       closeModal()
     },
-    [closeModal, mainCanvasCtrl]
+    [closeModal, dispatch]
   )
+
   const Gallery = useMemo(() => <ImportedImageGalleryHOC onClickImage={imageSelected} />, [
     imageSelected
   ])
 
   return (
-    <SetBgButton
+    <AddStickerButton
       closeModal={closeModal}
       isModalOpen={isModalOpen}
       openModal={openModal}
