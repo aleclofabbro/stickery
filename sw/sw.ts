@@ -3,8 +3,9 @@ import * as Routing from 'workbox-routing'
 // import * as Expiration from 'workbox-expiration'
 import 'workbox-sw'
 // import * as Precaching from 'workbox-precaching'
-import { stickeryDB } from '../src/srv/db'
+import { ImagesDB } from '../src/srv/db/db'
 
+const imagesDB = new ImagesDB()
 // declare var self: ServiceWorkerGlobalScope
 
 // console.log(`@@@@@@@@@@@@@@@@@@@@@@@@@@@@`)
@@ -23,10 +24,10 @@ if (!workbox) {
   Routing.registerRoute(new RegExp('.*/_/images/.*'), {
     handle: async (req) => {
       // console.log('#####', req.url.pathname)
-      const id = Number(req.url.pathname.split('/').reverse()[1])
-      // console.log('#####', id)
-      const img = await stickeryDB.imageData.get(id)
-      const meta = await stickeryDB.imageMeta.get(id)
+      const id = req.url.pathname
+      const img = await imagesDB.imageData.get(id)
+      const meta = await imagesDB.imageMeta.get(id)
+      // console.log('#####', img, meta)
       if (!(img && meta)) {
         return new Response('BABABA')
       }

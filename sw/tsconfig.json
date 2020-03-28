@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     //"noEmit": true,
     "lib": ["es5", "es6", "WebWorker", "esnext"],
-    "module": "ESNext"
+    "module": "ESNext",
+    "baseUrl": "../src"
     // "outFile": "../public/sw.js"
   },
   "files": ["sw.ts"]
