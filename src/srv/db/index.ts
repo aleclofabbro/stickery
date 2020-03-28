@@ -1,70 +1,109 @@
 import Dexie from 'dexie'
-import { useEffect, useMemo, useState } from 'react'
-import { getImageSrcUrl } from '../../lib/importImage'
+import { actionCtx } from 'lib/reducer/Actions'
+import { Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+
+class ImagesDB extends Dexie {
+  imageData: Dexie.Table<ImageData, number>
+  imageMeta: Dexie.Table<ImageMeta, number>
+  constructor() {
+    super('Stickery')
+    this.version(1).stores({
+      imageData: 'src, blob',
+      imageMeta: 'src, name, type, size, lastModified'
+    })
+    this.imageData = this.table('imageData')
+    this.imageMeta = this.table('imageMeta')
+  }
+}
 
 export interface ImageData {
-  id?: number
+  src: string
   blob: Blob
 }
 export interface ImageMeta {
-  id: number
   name: string
   type: string
   size: number
   lastModified: number
   src: string
 }
-
-class StickeryDatabase extends Dexie {
-  imageData: Dexie.Table<ImageData, number>
-  imageMeta: Dexie.Table<ImageMeta, number>
-
-  constructor() {
-    super('Stickery')
-    this.version(1).stores({
-      imageData: '++id, blob',
-      imageMeta: 'id,src, name, type, size, lastModified'
-    })
-    this.imageData = this.table('imageData')
-    this.imageMeta = this.table('imageMeta')
-  }
+export interface ImageDBState {
+  images: ImageMeta[]
 }
-export const stickeryDB = new StickeryDatabase()
+type ImageDBReducer = Reducer<ImageDBState, any>
 
-export const useImagesStore = () => {
-  const [images, setImagesMeta] = useState<ImageMeta[]>([])
+export const act_setImages = actionCtx<ImageDBState['images']>('setImages')
+export const act_importImage = actionCtx<File>('importImage')
+export const act_addImage = actionCtx<ImageMeta>('addImage')
+
+const initState: ImageDBState = {
+  images: []
+}
+const reducer: ImageDBReducer = (prev, action) =>
+  act_setImages.do(action, (images) => ({
+    ...prev,
+    images
+  })) ||
+  act_addImage.do(action, (meta) => ({
+    ...prev,
+    images: [meta, ...prev.images]
+  })) ||
+  prev
+
+export const useImageDb = () => {
+  const [state, _dispatch] = useReducer<ImageDBReducer>(reducer, initState)
+  const { current: imagesDB } = useRef(new ImagesDB())
+
+  const dispatch = useCallback<typeof _dispatch>(
+    (action) => {
+      act_importImage.do(action, (file) =>
+        importImageInDB(imagesDB, file).then(act_addImage(_dispatch))
+      )
+      _dispatch(action)
+    },
+    [imagesDB]
+  )
+
   useEffect(() => {
-    stickeryDB.imageMeta.toArray().then(setImagesMeta)
-  }, [])
-  useEffect(() => {
-    const creating = (_primKey: string, newImageMeta: ImageMeta, _tx: Dexie.Transaction) => {
-      setImagesMeta([newImageMeta, ...images])
-    }
-    const creatingHook = stickeryDB.imageMeta.hook('creating')
-    creatingHook.subscribe(creating)
-    return () => {
-      creatingHook.unsubscribe(creating)
-    }
-  }, [images])
+    imagesDB.imageMeta.toArray().then(act_setImages(dispatch))
+  }, [dispatch, imagesDB])
+
   return useMemo(() => {
-    return { images, add: importFile }
-  }, [images])
+    return {
+      state,
+      dispatch
+    }
+  }, [dispatch, state])
 }
 
-export const importFile = async (file: File): Promise<ImageMeta> => {
+export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<ImageMeta> => {
+  const { name, size, lastModified, type } = file
+  const src = createImageSrcUrl(name)
+
+  // @ts-ignore
+  const blob = await file.arrayBuffer()
+
   const imgData: ImageData = {
     //@ts-ignore
-    blob: await file.arrayBuffer()
+    blob,
+    src
   }
-  const id = await stickeryDB.imageData.add(imgData)
+  await imagesDB.imageData.add(imgData)
   const imgMeta: ImageMeta = {
-    size: file.size,
-    lastModified: file.lastModified,
-    name: file.name,
-    type: file.type,
-    src: getImageSrcUrl(file.name, id),
-    id
+    size,
+    lastModified,
+    name,
+    type,
+    src
   }
-  await stickeryDB.imageMeta.add(imgMeta)
-  return Promise.resolve(imgMeta)
+  await imagesDB.imageMeta.add(imgMeta)
+  return imgMeta
 }
+
+export const createId = () =>
+  Math.random()
+    .toString(36)
+    .substr(2, 9)
+
+export const getImageSrcUrl = (name: string, id: string) => `/_/images/${id}/${name}`
+export const createImageSrcUrl = (name: string) => getImageSrcUrl(name, createId())

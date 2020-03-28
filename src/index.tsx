@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { FC } from 'react'
 import ReactDOM from 'react-dom'
+import { useStickeryServices } from 'srv'
+import { MainTpl } from 'ui/templates/Main'
+import { useMainProps } from 'ui/templates/Main/useMainProps'
 import './index.css'
-import { App } from './hoc/App'
-import { GlobCtx } from './ctx/globs'
 // import { defineCustomElements } from '@ionic/pwa-elements/loader'
 // import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(
-  <GlobCtx>
-    <App />
-  </GlobCtx>,
-  document.getElementById('root')
-)
+const Main: FC = () => {
+  const srvcs = useStickeryServices()
+  const mainTpl = useMainProps(srvcs)
+  return <MainTpl {...mainTpl} />
+}
+
+ReactDOM.render(<Main />, document.getElementById('root'))
 
 // defineCustomElements(window)
 

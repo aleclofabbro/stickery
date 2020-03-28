@@ -4,9 +4,9 @@ export interface Opts {
   onFileChoosen(file: File, by: 'fs' | 'paste' | 'drop'): unknown
 }
 
-export const useFileChooser = ({ onFileChoosen: fileChoosen }: Opts): [() => unknown] => {
+export const useFileChooser = ({ onFileChoosen }: Opts): [() => unknown] => {
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const chooseFile = useCallback(() => inputRef.current && inputRef.current.click(), [])
+  const openFileChooser = useCallback(() => inputRef.current && inputRef.current.click(), [])
   useEffect(() => {
     const input = document.createElement('input')
     input.setAttribute('type', 'file')
@@ -16,7 +16,7 @@ export const useFileChooser = ({ onFileChoosen: fileChoosen }: Opts): [() => unk
       if (!file) {
         return
       }
-      fileChoosen(file, 'fs')
+      onFileChoosen(file, 'fs')
     }
     input.addEventListener('change', changeListener)
     document.body.appendChild(input)
@@ -26,7 +26,7 @@ export const useFileChooser = ({ onFileChoosen: fileChoosen }: Opts): [() => unk
       document.body.removeChild(input)
       inputRef.current = null
     }
-  }, [fileChoosen])
+  }, [onFileChoosen])
 
   useEffect(() => {
     const pasteListener = (pasteEv: ClipboardEvent) => {
@@ -35,13 +35,13 @@ export const useFileChooser = ({ onFileChoosen: fileChoosen }: Opts): [() => unk
         return
       }
       const file = data.files[0]
-      fileChoosen(file, 'paste')
+      onFileChoosen(file, 'paste')
     }
     document.body.addEventListener('paste', pasteListener)
     return () => {
       document.body.removeEventListener('paste', pasteListener)
     }
-  }, [fileChoosen])
+  }, [onFileChoosen])
 
   useEffect(() => {
     const dropListener = (dragEv: DragEvent) => {
@@ -50,13 +50,13 @@ export const useFileChooser = ({ onFileChoosen: fileChoosen }: Opts): [() => unk
         return
       }
       const file = data.files[0]
-      fileChoosen(file, 'paste')
+      onFileChoosen(file, 'drop')
     }
     document.body.addEventListener('drop', dropListener)
     return () => {
       document.body.removeEventListener('drop', dropListener)
     }
-  }, [fileChoosen])
+  }, [onFileChoosen])
 
-  return [chooseFile]
+  return [openFileChooser]
 }

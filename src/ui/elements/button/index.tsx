@@ -12,3 +12,8 @@ export const Button: SFC<Button> = ({ onClick, style, children }) => {
     </button>
   )
 }
+
+export const btnStyle: CSSProperties = {
+  float: 'left',
+  backgroundColor: 'gray'
+}
