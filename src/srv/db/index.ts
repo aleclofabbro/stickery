@@ -1,32 +1,7 @@
-import Dexie from 'dexie'
 import { actionCtx } from 'lib/reducer/Actions'
 import { Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { ImageMeta, ImagesDB, ImageData } from './db'
 
-class ImagesDB extends Dexie {
-  imageData: Dexie.Table<ImageData, number>
-  imageMeta: Dexie.Table<ImageMeta, number>
-  constructor() {
-    super('Stickery')
-    this.version(1).stores({
-      imageData: 'src, blob',
-      imageMeta: 'src, name, type, size, lastModified'
-    })
-    this.imageData = this.table('imageData')
-    this.imageMeta = this.table('imageMeta')
-  }
-}
-
-export interface ImageData {
-  src: string
-  blob: Blob
-}
-export interface ImageMeta {
-  name: string
-  type: string
-  size: number
-  lastModified: number
-  src: string
-}
 export interface ImageDBState {
   images: ImageMeta[]
 }
@@ -51,8 +26,8 @@ const reducer: ImageDBReducer = (prev, action) =>
   prev
 
 export const useImageDb = () => {
-  const [state, _dispatch] = useReducer<ImageDBReducer>(reducer, initState)
   const { current: imagesDB } = useRef(new ImagesDB())
+  const [state, _dispatch] = useReducer<ImageDBReducer>(reducer, initState)
 
   const dispatch = useCallback<typeof _dispatch>(
     (action) => {
@@ -66,7 +41,7 @@ export const useImageDb = () => {
 
   useEffect(() => {
     imagesDB.imageMeta.toArray().then(act_setImages(dispatch))
-  }, [dispatch, imagesDB])
+  }, [dispatch, imagesDB.imageMeta])
 
   return useMemo(() => {
     return {
@@ -79,14 +54,13 @@ export const useImageDb = () => {
 export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<ImageMeta> => {
   const { name, size, lastModified, type } = file
   const src = createImageSrcUrl(name)
-
+  const id = src
   // @ts-ignore
-  const blob = await file.arrayBuffer()
+  const blob: Blob = await file.arrayBuffer()
 
   const imgData: ImageData = {
-    //@ts-ignore
     blob,
-    src
+    id
   }
   await imagesDB.imageData.add(imgData)
   const imgMeta: ImageMeta = {
@@ -94,7 +68,7 @@ export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<I
     lastModified,
     name,
     type,
-    src
+    id
   }
   await imagesDB.imageMeta.add(imgMeta)
   return imgMeta

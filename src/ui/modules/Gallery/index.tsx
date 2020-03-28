@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, SFC, useCallback, useMemo } from 'react'
 import { useFileChooser } from '../../../lib/hook/useFileChooser'
-import { ImageMeta } from '../../../srv/db'
-import { Button } from '../../elements/button'
+import { Button } from 'ui/elements/button'
+import { ImageMeta } from 'srv/db/db'
 
 export interface Image {
   src: string
@@ -31,7 +31,7 @@ export const ImageGallery: SFC<ImageGallery> = ({ onClickImage, images, add }) =
       </div>
       <div style={galleryContainerStyle}>
         {galleryItems.map((galleryItem) => (
-          <GalleryItem {...galleryItem} />
+          <GalleryItem key={galleryItem.image.id} {...galleryItem} />
         ))}
       </div>
     </div>
@@ -44,7 +44,7 @@ export interface GalleryItem {
 }
 export const GalleryItem: FC<GalleryItem> = ({ image, onClickImage }) => {
   const onClick = useCallback(() => onClickImage(image), [image, onClickImage])
-  return <img onClick={onClick} src={image.src} alt={image.name} />
+  return <img onClick={onClick} src={image.id} alt={image.name} />
 }
 const templateStyle: CSSProperties = {
   display: 'grid',
