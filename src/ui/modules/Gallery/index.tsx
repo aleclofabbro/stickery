@@ -1,7 +1,8 @@
-import React, { CSSProperties, FC, SFC, useCallback, useMemo } from 'react'
-import { useFileChooser } from '../../../lib/hook/useFileChooser'
-import { Button } from 'ui/elements/button'
+import { actionCtx } from 'lib/Actions'
+import React, { CSSProperties, FC, SFC, useCallback } from 'react'
 import { ImageMeta } from 'srv/db/db'
+import { Button } from 'ui/elements/button'
+import { useGalleryProps } from './useGalleryProps'
 
 export interface Image {
   src: string
@@ -9,19 +10,10 @@ export interface Image {
   thumbnailWidth: number
   thumbnailHeight: number
 }
-export interface ImageGallery {
-  onClickImage(meta: ImageMeta): unknown
-  images: ImageMeta[]
-  add(_: File): unknown
-}
-export const ImageGallery: SFC<ImageGallery> = ({ onClickImage, images, add }) => {
-  const [openFileChooser] = useFileChooser({ onFileChoosen: add })
-
-  const galleryItems = useMemo<GalleryItem[]>(
-    () => images.map((image) => ({ image, onClickImage: () => onClickImage(image) })),
-    [images, onClickImage]
-  )
-
+export const act_clickImage = actionCtx<ImageMeta>('act_clickImage')
+export interface ImageGallery {}
+export const ImageGallery: SFC<ImageGallery> = () => {
+  const { clickImage, images, openFileChooser } = useGalleryProps()
   return (
     <div style={templateStyle}>
       <div style={headStyle}>
@@ -30,8 +22,8 @@ export const ImageGallery: SFC<ImageGallery> = ({ onClickImage, images, add }) =
         <span>o incolla</span>
       </div>
       <div style={galleryContainerStyle}>
-        {galleryItems.map((galleryItem) => (
-          <GalleryItem key={galleryItem.image.id} {...galleryItem} />
+        {images.map((image) => (
+          <GalleryItem key={image.id} image={image} onClickImage={clickImage} />
         ))}
       </div>
     </div>

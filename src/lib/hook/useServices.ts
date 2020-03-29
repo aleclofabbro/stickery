@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { Action } from 'lib/Actions'
+import { Middleware } from 'lib/Actions/provideDispatcher'
 
 export type Service<S> = { state: S; dispatch: (_: any) => unknown }
 type Services = {
@@ -12,7 +14,8 @@ export const useServices = <S extends Services>(
   srvcs: S
 ): {
   state: State<S>
-  dispatch: (_: any) => unknown
+  dispatch: (_: Action<any>) => unknown
+  mw: Middleware
 } => {
   return useMemo(() => {
     const keys = Object.keys(srvcs)
@@ -31,10 +34,14 @@ export const useServices = <S extends Services>(
       }),
       {} as State<S>
     )
-
+    const mw: Middleware = (action, _dispatch) => {
+      dispatch(action)
+      return action
+    }
     return {
       state,
-      dispatch
+      dispatch,
+      mw
     }
   }, [srvcs])
 }

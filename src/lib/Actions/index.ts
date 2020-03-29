@@ -1,12 +1,14 @@
-interface Action<P> {
-  payload: P
-  symbol: Symbol
+export interface Action<P> {
+  readonly payload: P
+  readonly type: string
+  readonly symbol: Symbol
+  readonly handled: boolean
 }
-type Dispatch<P> = (_: Action<P>) => unknown
+export type Dispatch<P> = (_: Action<P>) => unknown
 interface ActionCtx<P> {
   (dispatch: Dispatch<P>): (payload: P) => Action<P>
   (payload: P): Action<P>
-  do<T>(a: any, h: (_: P) => T): T | undefined
+  do<T>(a: any, h: (_: P) => T): T | void
 }
 export const isDispatch = <P>(_: any): _ is Dispatch<P> => 'function' === typeof _
 export const actionCtx = <P>(type: string): ActionCtx<P> => {
@@ -23,14 +25,22 @@ export const actionCtx = <P>(type: string): ActionCtx<P> => {
     }
 
     const payload = payload_or_dispatch
-    return {
+    const newAction: Action<P> = {
+      type,
       payload,
-      symbol
+      symbol,
+      handled: false
     }
+    return newAction
   }) as ActionCtx<P>
 
-  const _do: ActionCtx<P>['do'] = (_: any, handler) =>
-    !!_ && 'symbol' in _ && _.symbol === symbol ? handler(_.payload) : undefined
+  const _do: ActionCtx<P>['do'] = (_: Action<any>, handler) => {
+    if (!!_ && 'symbol' in _ && _.symbol === symbol) {
+      //@ts-ignore
+      _.handled = true
+      return handler(_.payload)
+    }
+  }
 
   create.do = _do
 
