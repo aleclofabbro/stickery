@@ -1,19 +1,22 @@
-import React, { CSSProperties, SFC } from 'react'
-import { ImageGallery, act_clickImage } from 'ui/modules/Gallery'
-import { ProvideMiddleware, Middleware } from 'lib/Actions/provideDispatcher'
+import React, { CSSProperties, SFC, useCallback } from 'react'
+import { ImageGallery } from 'ui/modules/Gallery'
+import { useMWProvider } from 'lib/Actions/provideDispatcher'
+import { cmd_gallery_image_clicked } from 'ui/modules/Gallery/useGalleryProps'
 
 export interface MainTpl {}
 export const MainTpl: SFC<MainTpl> = () => {
-  const galleryMW: Middleware = (action) => {
-    act_clickImage.do(action, (meta) => console.log('clickedMeta', meta))
-    return action
-  }
+  const GalleryMiddleware = useMWProvider(
+    useCallback((action) => {
+      cmd_gallery_image_clicked.do(action, (meta) => console.log('clickedMeta', meta))
+      return action
+    }, [])
+  )
   return (
     <div style={outerStyle}>
       <div style={canvasStyle}>
-        <ProvideMiddleware mw={galleryMW}>
+        <GalleryMiddleware>
           <ImageGallery />
-        </ProvideMiddleware>
+        </GalleryMiddleware>
       </div>
     </div>
   )

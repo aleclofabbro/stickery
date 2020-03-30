@@ -24,7 +24,7 @@ export const Modal: SFC<Modal> = ({ onClickOut, children }) => {
         return
       } else {
         back()
-        onClickOut()
+        onClickOut() //FIXME: si può togliere ? back() richiama anche onClickOut()?
       }
     },
     [onClickOut, back]

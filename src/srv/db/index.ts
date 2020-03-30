@@ -7,19 +7,19 @@ export interface ImageDBState {
 }
 type ImageDBReducer = Reducer<ImageDBState, any>
 
-export const act_setImages = actionCtx<ImageDBState['images']>('setImages')
-export const act_importImage = actionCtx<File>('importImage')
-export const act_addImage = actionCtx<ImageMeta>('addImage')
+const cmd_int_set_DB_images = actionCtx<ImageDBState['images']>('cmd_int_set_DB_images')
+const cmd_int_add_image_meta = actionCtx<ImageMeta>('cmd_int_add_image_meta')
+export const cmd_import_image_file = actionCtx<File>('cmd_import_image_file')
 
 const initState: ImageDBState = {
   images: []
 }
 const reducer: ImageDBReducer = (prev, action) =>
-  act_setImages.do(action, (images) => ({
+  cmd_int_set_DB_images.do(action, (images) => ({
     ...prev,
     images
   })) ||
-  act_addImage.do(action, (meta) => ({
+  cmd_int_add_image_meta.do(action, (meta) => ({
     ...prev,
     images: [meta, ...prev.images]
   })) ||
@@ -31,8 +31,8 @@ export const useImageDb = () => {
 
   const dispatch = useCallback<typeof _dispatch>(
     (action) => {
-      act_importImage.do(action, (file) =>
-        importImageInDB(imagesDB, file).then(act_addImage(_dispatch))
+      cmd_import_image_file.do(action, (file) =>
+        importImageInDB(imagesDB, file).then(cmd_int_add_image_meta(_dispatch))
       )
       _dispatch(action)
     },
@@ -40,7 +40,7 @@ export const useImageDb = () => {
   )
 
   useEffect(() => {
-    imagesDB.imageMeta.toArray().then(act_setImages(dispatch))
+    imagesDB.imageMeta.toArray().then(cmd_int_set_DB_images(dispatch))
   }, [dispatch, imagesDB.imageMeta])
 
   return useMemo(() => {

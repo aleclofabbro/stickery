@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 export interface Action<P> {
   readonly payload: P
   readonly type: string
@@ -41,8 +43,10 @@ export const actionCtx = <P>(type: string): ActionCtx<P> => {
       return handler(_.payload)
     }
   }
-
   create.do = _do
 
   return create
 }
+
+export const useActionDispatcher = <P>(actionCtx: ActionCtx<P>, dispatch: Dispatch<P>) =>
+  useCallback((payload: P) => actionCtx(dispatch)(payload), [dispatch, actionCtx])

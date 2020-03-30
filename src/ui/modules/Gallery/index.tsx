@@ -1,4 +1,3 @@
-import { actionCtx } from 'lib/Actions'
 import React, { CSSProperties, FC, SFC, useCallback } from 'react'
 import { ImageMeta } from 'srv/db/db'
 import { Button } from 'ui/elements/button'
@@ -10,7 +9,6 @@ export interface Image {
   thumbnailWidth: number
   thumbnailHeight: number
 }
-export const act_clickImage = actionCtx<ImageMeta>('act_clickImage')
 export interface ImageGallery {}
 export const ImageGallery: SFC<ImageGallery> = () => {
   const { clickImage, images, openFileChooser } = useGalleryProps()
@@ -36,7 +34,21 @@ export interface GalleryItem {
 }
 export const GalleryItem: FC<GalleryItem> = ({ image, onClickImage }) => {
   const onClick = useCallback(() => onClickImage(image), [image, onClickImage])
-  return <img onClick={onClick} src={image.id} alt={image.name} />
+  return (
+    <div style={imageDivStyle} onClick={onClick}>
+      <img style={imageStyle} src={image.id} alt={image.name} />
+    </div>
+  )
+}
+const imageStyle: CSSProperties = {
+  width: '100%'
+}
+const imageDivStyle: CSSProperties = {
+  maxWidth: '100%',
+  borderColor: 'light-gray',
+  borderWidth: 0.8,
+  padding: '3px',
+  margin: '3px'
 }
 const templateStyle: CSSProperties = {
   display: 'grid',

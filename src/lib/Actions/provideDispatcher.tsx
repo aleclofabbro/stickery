@@ -22,6 +22,9 @@ export const useDispatcher = () => {
   return useContext(DispatcherCtx)
 }
 
+export const useMWProvider = (mw: Middleware): FC =>
+  useMemo(() => ({ children }) => <ProvideMiddleware mw={mw}>{children}</ProvideMiddleware>, [mw])
+
 export const ProvideMiddleware: FC<ProvideMiddleware> = ({ mw, children }) => {
   const parentDispatcher = useDispatcher()
   const providerDispatch = useMemo<DispatcherCtx>(() => {
