@@ -5,7 +5,7 @@ import { cmd_gallery_image_clicked } from 'ui/modules/Gallery/useGalleryProps'
 
 export interface MainTpl {}
 export const MainTpl: SFC<MainTpl> = () => {
-  const GalleryMiddleware = useMWProvider(
+  const GalleryMWProvider = useMWProvider(
     useCallback((action) => {
       cmd_gallery_image_clicked.do(action, (meta) => console.log('clickedMeta', meta))
       return action
@@ -14,9 +14,9 @@ export const MainTpl: SFC<MainTpl> = () => {
   return (
     <div style={outerStyle}>
       <div style={canvasStyle}>
-        <GalleryMiddleware>
+        <GalleryMWProvider>
           <ImageGallery />
-        </GalleryMiddleware>
+        </GalleryMWProvider>
       </div>
     </div>
   )
