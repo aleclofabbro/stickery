@@ -2,9 +2,12 @@ import React, { createContext, FC, useContext, useMemo } from 'react'
 import { Action, Dispatch } from '.'
 
 export interface DispatcherCtx {
-  dispatch: Dispatch<any>
+  dispatch: Dispatch<any, any>
 }
-export type Middleware = (action: Action<any>, dispatch: Dispatch<any>) => Action<any> | undefined
+export type Middleware = (
+  action: Action<any>,
+  dispatch: Dispatch<any, any>
+) => Action<any> | undefined
 export interface ProvideMiddleware {
   mw: Middleware
 }
@@ -12,8 +15,11 @@ export interface ProvideMiddleware {
 export const DispatcherCtx = createContext<DispatcherCtx>({
   dispatch: (action) => {
     // console.log('DispatcherCtx', action)
-    if (!action.handled) {
-      console.warn('no handler for action', action, new Error())
+    if (action.consumable && !action.consumed) {
+      console.warn(action, new Error(`Command not consumed`))
+      action.deferred.resolve(action.notConsumedResponse)
+    } else if (!action.handled) {
+      console.warn(action, new Error('Action not handled'))
     }
   }
 })

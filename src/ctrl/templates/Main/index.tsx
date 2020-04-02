@@ -18,6 +18,7 @@ export const MainCtrl: FC<MainCtrl> = () => {
       [addFileToDb]
     )
   )
+
   const GalleryComp = useMemo(
     (): FC => () => (
       <GalleryMWProvider>

@@ -1,4 +1,4 @@
-import { actionCtx } from 'lib/Actions'
+import { actionCtx, commandCtx } from 'lib/Actions'
 import { Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { ImageMeta, ImagesDB, ImageData } from './db'
 
@@ -9,7 +9,10 @@ type ImageDBReducer = Reducer<ImageDBState, any>
 
 const cmd_int_set_DB_images = actionCtx<ImageDBState['images']>('cmd_int_set_DB_images')
 const cmd_int_add_image_meta = actionCtx<ImageMeta>('cmd_int_add_image_meta')
-export const cmd_imagedb_import_image_file = actionCtx<File>('cmd_import_image_file')
+export const cmd_imagedb_import_image_file = commandCtx<File, ImageMeta | null>(
+  'cmd_import_image_file',
+  null
+)
 
 const initState: ImageDBState = {
   images: []
@@ -29,15 +32,14 @@ export const useImageDb = () => {
   const { current: imagesDB } = useRef(new ImagesDB())
   const [state, _dispatch] = useReducer<ImageDBReducer>(reducer, initState)
 
-  const dispatch = useCallback<typeof _dispatch>(
-    (action) => {
-      cmd_imagedb_import_image_file.do(action, (file) =>
-        importImageInDB(imagesDB, file).then(cmd_int_add_image_meta(_dispatch))
-      )
-      _dispatch(action)
-    },
-    [imagesDB]
-  )
+  const dispatch = useCallback<typeof _dispatch>((action) => {
+    // cmd_imagedb_import_image_file.consume(action, (file) =>
+    //   importImageInDB(imagesDB, file)
+    //     .then(cmd_int_add_image_meta(_dispatch))
+    //     .then((_) => _.payload)
+    // )
+    _dispatch(action)
+  }, [])
 
   useEffect(() => {
     imagesDB.imageMeta.toArray().then(cmd_int_set_DB_images(dispatch))
@@ -55,6 +57,7 @@ export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<I
   const { name, size, lastModified, type } = file
   const src = createImageSrcUrl(name)
   const id = src
+
   // @ts-ignore
   const blob: Blob = await file.arrayBuffer()
 
