@@ -1,1 +1,2 @@
-export type ComponentArray = [string | number, ComponentType][]
+export * from './data'
+export * from './formik'

@@ -1,16 +1,12 @@
-import React, { SFC, CSSProperties } from 'react'
+import React, { FC, CSSProperties } from 'react'
 
-export interface Button {
-  onClick(): unknown
-  style?: CSSProperties
-}
+export type Button = React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>
 
-export const Button: SFC<Button> = ({ onClick, style, children }) => {
-  return (
-    <button onClick={onClick} style={style}>
-      {children}
-    </button>
-  )
+export const Button: FC<Button & Button> = (props) => {
+  return <button {...props}>{props.children}</button>
 }
 
 export const btnStyle: CSSProperties = {

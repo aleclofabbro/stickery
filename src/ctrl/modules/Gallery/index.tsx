@@ -1,24 +1,25 @@
-import { actionCtx, useActionDispatch } from 'lib/Actions'
+import { ComponentArray } from '@types'
+import { useActionDispatch } from 'lib/Actions'
 import { useFileChooser } from 'lib/hook/useFileChooser'
-import React, { FC, useCallback, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useStickeryState } from 'srv'
+import { cmd_imagedb_import_image_file } from 'srv/db'
 import { ImageMeta } from 'srv/db/db'
 import { Gallery, GalleryItem } from 'ui/modules/Gallery'
-import { ComponentArray } from '@types'
 
-export const cmd_gallery_image_clicked = actionCtx<ImageMeta>('cmd_gallery_image_clicked')
-export const cmd_gallery_add_file = actionCtx<File>('cmd_gallery_add_file')
-
-export interface GalleryCtrl {}
-export const GalleryCtrl: FC<GalleryCtrl> = () => {
+export interface GalleryCtrl {
+  clickImage(_: ImageMeta): unknown
+}
+export const GalleryCtrl: FC<GalleryCtrl> = ({ clickImage }) => {
   const {
     imageDB: { images }
   } = useStickeryState()
-  const add = useActionDispatch(cmd_gallery_add_file)
+  const add = useActionDispatch(cmd_imagedb_import_image_file)
+
   const [openFileChooser] = useFileChooser({ onFileChoosen: add })
   const GalleryItems = useMemo<ComponentArray>(
-    () => images.map((image) => [image.src, () => <GalleryItemCTRL {...{ image }} />]),
-    [images]
+    () => images.map((image) => [image.src, () => <GalleryItemCtrl {...{ image, clickImage }} />]),
+    [clickImage, images]
   )
 
   const props = useMemo<Gallery>(() => {
@@ -32,14 +33,13 @@ export const GalleryCtrl: FC<GalleryCtrl> = () => {
 
 export interface GalleryItemCTRL {
   image: ImageMeta
+  clickImage(image: ImageMeta): unknown
 }
-export const GalleryItemCTRL: FC<GalleryItemCTRL> = ({ image }) => {
-  const clickImageAction = useActionDispatch(cmd_gallery_image_clicked)
-  const clickImage = useCallback(() => clickImageAction(image), [image, clickImageAction])
+export const GalleryItemCtrl: FC<GalleryItemCTRL> = ({ image, clickImage }) => {
   const props = useMemo<GalleryItem>(() => {
     return {
       image,
-      clickImage
+      clickImage: () => clickImage(image)
     }
   }, [clickImage, image])
   return <GalleryItem {...props} />

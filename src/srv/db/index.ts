@@ -1,6 +1,6 @@
 import { actionCtx, commandCtx } from 'lib/Actions'
 import { Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
-import { ImageMeta, ImagesDB, ImageData } from './db'
+import { ImageMeta, StickeryDB, ImageData } from './db'
 
 export interface ImageDBState {
   images: ImageMeta[]
@@ -29,7 +29,7 @@ const reducer: ImageDBReducer = (prev, action) =>
   prev
 
 export const useImageDb = () => {
-  const { current: imagesDB } = useRef(new ImagesDB())
+  const { current: imagesDB } = useRef(new StickeryDB())
   const [state, _dispatch] = useReducer<ImageDBReducer>(reducer, initState)
 
   const dispatch = useCallback<typeof _dispatch>((action) => {
@@ -53,7 +53,7 @@ export const useImageDb = () => {
   }, [dispatch, state])
 }
 
-export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<ImageMeta> => {
+export const importImageInDB = async (imagesDB: StickeryDB, file: File): Promise<ImageMeta> => {
   const { name, size, lastModified, type } = file
   const src = createImageSrcUrl(name)
   const id = src

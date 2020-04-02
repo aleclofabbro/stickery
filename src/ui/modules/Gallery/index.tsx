@@ -1,18 +1,12 @@
-import React, { CSSProperties, FC, SFC } from 'react'
+import React, { CSSProperties, FC } from 'react'
 import { Button } from 'ui/elements/button'
 import { ComponentArray } from '@types'
 
-export interface Image {
-  src: string
-  thumbnail: string
-  thumbnailWidth: number
-  thumbnailHeight: number
-}
 export interface Gallery {
   openFileChooser(): unknown
   GalleryItems: ComponentArray
 }
-export const Gallery: SFC<Gallery> = ({ GalleryItems, openFileChooser }) => {
+export const Gallery: FC<Gallery> = ({ GalleryItems, openFileChooser }) => {
   return (
     <div style={templateStyle}>
       <div style={headStyle}>

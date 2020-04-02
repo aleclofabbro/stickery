@@ -17,6 +17,7 @@ interface ActionCtx<P, R = void> {
   (dispatch: Dispatch<P, R>): (payload: P) => Action<P, R>
   (payload: P): Action<P, R>
   do<T>(a: any, h: (_: P) => T): T | void
+  is(a: any): a is Action<P, R>
   consume(a: any, h: (_: P) => R | Promise<R>): void
 }
 export const isDispatch = <P, R>(_: any): _ is Dispatch<P, R> => 'function' === typeof _
@@ -64,7 +65,10 @@ export const _commandCtx = <P, R = void>(
     }
     return newAction
   }) as ActionCtx<P, R>
+
   const is = (_: any): _ is Action<P, R> => !!_ && 'symbol' in _ && _.symbol === symbol
+  create.is = is
+
   const _do: ActionCtx<P, R>['do'] = (_: Action<any, any>, handler) => {
     if (is(_)) {
       //@ts-ignore

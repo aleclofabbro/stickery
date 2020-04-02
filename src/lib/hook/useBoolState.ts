@@ -1,9 +1,14 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useMemo } from 'react'
 
-export const useBoolState = (initial: boolean) => {
-  let [state, setState] = useState(false)
+export const useBoolState = (initial = false) => {
+  let [state, setState] = useState(initial)
   const toFalse = useCallback(() => setState(false), [])
   const toTrue = useCallback(() => setState(true), [])
   const toggle = useCallback(() => setState(!state), [state])
-  return { b: state, T: toTrue, F: toFalse, t: toggle, s: setState }
+  return useMemo(() => ({ b: state, T: toTrue, F: toFalse, t: toggle, s: setState }), [
+    state,
+    toFalse,
+    toTrue,
+    toggle
+  ])
 }
