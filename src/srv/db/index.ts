@@ -9,7 +9,7 @@ type ImageDBReducer = Reducer<ImageDBState, any>
 
 const cmd_int_set_DB_images = actionCtx<ImageDBState['images']>('cmd_int_set_DB_images')
 const cmd_int_add_image_meta = actionCtx<ImageMeta>('cmd_int_add_image_meta')
-export const cmd_import_image_file = actionCtx<File>('cmd_import_image_file')
+export const cmd_imagedb_import_image_file = actionCtx<File>('cmd_import_image_file')
 
 const initState: ImageDBState = {
   images: []
@@ -31,7 +31,7 @@ export const useImageDb = () => {
 
   const dispatch = useCallback<typeof _dispatch>(
     (action) => {
-      cmd_import_image_file.do(action, (file) =>
+      cmd_imagedb_import_image_file.do(action, (file) =>
         importImageInDB(imagesDB, file).then(cmd_int_add_image_meta(_dispatch))
       )
       _dispatch(action)
@@ -60,7 +60,7 @@ export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<I
 
   const imgData: ImageData = {
     blob,
-    id
+    src: id
   }
   await imagesDB.imageData.add(imgData)
   const imgMeta: ImageMeta = {
@@ -68,7 +68,7 @@ export const importImageInDB = async (imagesDB: ImagesDB, file: File): Promise<I
     lastModified,
     name,
     type,
-    id
+    src: id
   }
   await imagesDB.imageMeta.add(imgMeta)
   return imgMeta

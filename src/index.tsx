@@ -1,9 +1,9 @@
+import { MainCtrl } from 'ctrl/templates/Main'
+import { ProvideMiddleware } from 'lib/Actions/provideDispatcher'
 import React, { FC } from 'react'
 import ReactDOM from 'react-dom'
-import { useCreateStickeryServices, ProvideStickeryServices } from 'srv'
-import { MainTpl } from 'ui/templates/Main'
+import { ProvideStickeryServices, useCreateStickeryServices } from 'srv'
 import './index.css'
-import { ProvideMiddleware } from 'lib/Actions/provideDispatcher'
 // import { defineCustomElements } from '@ionic/pwa-elements/loader'
 // import * as serviceWorker from './serviceWorker'
 
@@ -13,7 +13,7 @@ const Main: FC = () => {
   return (
     <ProvideMiddleware mw={srvcs.mw}>
       <ProvideStickeryServices srvcs={srvcs}>
-        <MainTpl />
+        <MainCtrl />
       </ProvideStickeryServices>
     </ProvideMiddleware>
   )

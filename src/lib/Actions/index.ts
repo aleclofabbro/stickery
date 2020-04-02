@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useDispatcher } from './provideDispatcher'
 
 export interface Action<P> {
   readonly payload: P
@@ -48,5 +49,15 @@ export const actionCtx = <P>(type: string): ActionCtx<P> => {
   return create
 }
 
-export const useActionDispatcher = <P>(actionCtx: ActionCtx<P>, dispatch: Dispatch<P>) =>
-  useCallback((payload: P) => actionCtx(dispatch)(payload), [dispatch, actionCtx])
+export const useActionCustDispatch = <P>(actionCtx: ActionCtx<P>, dispatch: Dispatch<P>) => {
+  return useCallback(
+    (payload: P) => {
+      return actionCtx(dispatch)(payload)
+    },
+    [dispatch, actionCtx]
+  )
+}
+export const useActionDispatch = <P>(actionCtx: ActionCtx<P>) => {
+  const { dispatch } = useDispatcher()
+  return useActionCustDispatch(actionCtx, dispatch)
+}

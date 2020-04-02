@@ -1,7 +1,6 @@
-import React, { CSSProperties, FC, SFC, useCallback } from 'react'
-import { ImageMeta } from 'srv/db/db'
+import React, { CSSProperties, FC, SFC } from 'react'
 import { Button } from 'ui/elements/button'
-import { useGalleryProps } from './useGalleryProps'
+import { ComponentArray } from '@types'
 
 export interface Image {
   src: string
@@ -9,9 +8,11 @@ export interface Image {
   thumbnailWidth: number
   thumbnailHeight: number
 }
-export interface ImageGallery {}
-export const ImageGallery: SFC<ImageGallery> = () => {
-  const { clickImage, images, openFileChooser } = useGalleryProps()
+export interface Gallery {
+  openFileChooser(): unknown
+  GalleryItems: ComponentArray
+}
+export const Gallery: SFC<Gallery> = ({ GalleryItems, openFileChooser }) => {
   return (
     <div style={templateStyle}>
       <div style={headStyle}>
@@ -20,8 +21,8 @@ export const ImageGallery: SFC<ImageGallery> = () => {
         <span>o incolla</span>
       </div>
       <div style={galleryContainerStyle}>
-        {images.map((image) => (
-          <GalleryItem key={image.id} image={image} onClickImage={clickImage} />
+        {GalleryItems.map(([key, Item]) => (
+          <Item key={key} />
         ))}
       </div>
     </div>
@@ -29,14 +30,16 @@ export const ImageGallery: SFC<ImageGallery> = () => {
 }
 
 export interface GalleryItem {
-  image: ImageMeta
-  onClickImage(_: ImageMeta): unknown
+  image: {
+    src: string
+    name: string
+  }
+  clickImage(): unknown
 }
-export const GalleryItem: FC<GalleryItem> = ({ image, onClickImage }) => {
-  const onClick = useCallback(() => onClickImage(image), [image, onClickImage])
+export const GalleryItem: FC<GalleryItem> = ({ image, clickImage }) => {
   return (
-    <div style={imageDivStyle} onClick={onClick}>
-      <img style={imageStyle} src={image.id} alt={image.name} />
+    <div style={imageDivStyle} onClick={clickImage}>
+      <img style={imageStyle} src={image.src} alt={image.name} />
     </div>
   )
 }

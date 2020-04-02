@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 export interface ImageData {
-  id: string
+  src: string
   blob: Blob
 }
 export interface ImageMeta {
@@ -8,7 +8,7 @@ export interface ImageMeta {
   type: string
   size: number
   lastModified: number
-  id: string
+  src: string
 }
 export class ImagesDB extends Dexie {
   imageData: Dexie.Table<ImageData, string>
@@ -16,8 +16,8 @@ export class ImagesDB extends Dexie {
   constructor() {
     super('Stickery')
     this.version(1).stores({
-      imageData: 'id, blob',
-      imageMeta: 'id, name, type, size, lastModified'
+      imageData: 'src, blob',
+      imageMeta: 'src, name, type, size, lastModified'
     })
     this.imageData = this.table('imageData')
     this.imageMeta = this.table('imageMeta')
