@@ -35,7 +35,12 @@ export const NewProjectViewCtrl: FC<NewProjectViewCtrl> = () => {
     }),
     [GalleryComp, formik]
   )
-  return <NewProjectView {...props} />
+  return (
+    <>
+      {`${formik.isSubmitting}`}
+      <NewProjectView {...props} />
+    </>
+  )
 }
 const Gallery: FC<{ setBackgroundUrl(_: string): unknown }> = ({ setBackgroundUrl }) => {
   const clickImage = useCallback<GalleryCtrl['clickImage']>(

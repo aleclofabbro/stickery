@@ -9,7 +9,7 @@ export interface Project {
   objects: ProjectObject[]
 }
 export interface ProjectState {
-  project: Project | null
+  current: Project | null
 }
 
 export type PrjReducer = Reducer<ProjectState, any>
@@ -22,32 +22,34 @@ export const cmd_prj_new_project = actionCtx<Pick<Project, 'name' | 'background'
 )
 
 const initialState: ProjectState = {
-  project: null
+  current: null
 }
 export const reducer: PrjReducer = (prev, action) => {
   if (cmd_prj_new_project.is(action)) {
     return {
-      project: {
+      current: {
         ...action.payload,
         objects: []
       }
     }
   }
-  if (prev.project) {
-    return {
-      ...prev,
-      project: {
-        ...(cmd_prj_set_background.is(action)
-          ? {
-              ...prev.project,
-              background: action.payload
-            }
-          : cmd_prj_add_object.is(action)
-          ? {
-              ...prev.project,
-              objects: [...prev.project.objects, action.payload]
-            }
-          : prev.project)
+  if (prev.current) {
+    if (cmd_prj_set_background.is(action)) {
+      return {
+        ...prev,
+        current: {
+          ...prev.current,
+          background: action.payload
+        }
+      }
+    }
+    if (cmd_prj_add_object.is(action)) {
+      return {
+        ...prev,
+        current: {
+          ...prev.current,
+          objects: [...prev.current.objects, action.payload]
+        }
       }
     }
   }

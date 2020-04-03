@@ -17,29 +17,38 @@ export const cmd_imagedb_import_image_file = commandCtx<File, ImageMeta | null>(
 const initState: ImageDBState = {
   images: []
 }
-const reducer: ImageDBReducer = (prev, action) =>
-  cmd_int_set_DB_images.do(action, (images) => ({
-    ...prev,
-    images
-  })) ||
-  cmd_int_add_image_meta.do(action, (meta) => ({
-    ...prev,
-    images: [meta, ...prev.images]
-  })) ||
-  prev
+const reducer: ImageDBReducer = (prev, action) => {
+  if (cmd_int_set_DB_images.is(action)) {
+    return {
+      ...prev,
+      images: action.payload
+    }
+  }
+  if (cmd_int_add_image_meta.is(action)) {
+    return {
+      ...prev,
+      images: [action.payload, ...prev.images]
+    }
+  }
+  return prev
+}
 
 export const useImageDb = () => {
   const { current: imagesDB } = useRef(new StickeryDB())
-  const [state, _dispatch] = useReducer<ImageDBReducer>(reducer, initState)
+  const [state, internalDispatch] = useReducer<ImageDBReducer>(reducer, initState)
 
-  const dispatch = useCallback<typeof _dispatch>((action) => {
-    // cmd_imagedb_import_image_file.consume(action, (file) =>
-    //   importImageInDB(imagesDB, file)
-    //     .then(cmd_int_add_image_meta(_dispatch))
-    //     .then((_) => _.payload)
-    // )
-    _dispatch(action)
-  }, [])
+  const dispatch = useCallback<typeof internalDispatch>(
+    (action) => {
+      cmd_imagedb_import_image_file.consume(action, (file) =>
+        importImageInDB(imagesDB, file)
+          .then(cmd_int_add_image_meta(internalDispatch))
+          .then((action) => action.payload)
+      )
+
+      internalDispatch(action)
+    },
+    [imagesDB]
+  )
 
   useEffect(() => {
     imagesDB.imageMeta.toArray().then(cmd_int_set_DB_images(dispatch))

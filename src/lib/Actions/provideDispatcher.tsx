@@ -20,6 +20,7 @@ export const DispatcherCtx = createContext<DispatcherCtx>({
       action.deferred.resolve(action.notConsumedResponse)
     } else if (!action.handled) {
       console.warn(action, new Error('Action not handled'))
+      action.deferred.resolve(action.notConsumedResponse)
     }
   }
 })
