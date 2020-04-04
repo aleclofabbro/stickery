@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
-import { Project } from 'srv/project'
+import { ProjectData } from 'srv/@types/data'
 
 export interface ProjectView {
-  project: Project
+  project: ProjectData
 }
 export const ProjectView: FC<ProjectView> = ({ project }) => {
   return <pre>{`${JSON.stringify(project, null, 4)}`}</pre>

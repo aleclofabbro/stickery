@@ -1,13 +1,13 @@
 import React, { FC, createContext, useContext } from 'react'
-import { useProject } from 'srv/project'
-import { useImageDb } from 'srv/db'
+import { useProjectWorkbench } from 'srv/project'
+import { useImages } from 'srv/images'
 import { useServices } from 'lib/hook/useServices'
 
 export type StickeryServices = ReturnType<typeof useCreateStickeryServices>
 export const useCreateStickeryServices = () => {
   return useServices({
-    project: useProject(),
-    imageDB: useImageDb()
+    project: useProjectWorkbench(),
+    imageDB: useImages()
   })
 }
 

@@ -4,9 +4,7 @@ import { ProjectView } from 'ui/Views/Project'
 
 export interface ProjectViewCtrl {}
 export const ProjectViewCtrl: FC<ProjectViewCtrl> = () => {
-  const {
-    project: { current: project }
-  } = useStickeryState()
+  const { project } = useStickeryState()
   const props = useMemo<ProjectView | null>(() => {
     return (
       project && {

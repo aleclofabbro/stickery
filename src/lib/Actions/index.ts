@@ -66,7 +66,13 @@ export const _commandCtx = <P, R = void>(
     return newAction
   }) as ActionCtx<P, R>
 
-  const is = (_: any): _ is Action<P, R> => !!_ && 'symbol' in _ && _.symbol === symbol
+  const _is = (_: any): _ is Action<P, R> => !!_ && 'symbol' in _ && _.symbol === symbol
+  const is = (_: any): _ is Action<P, R> =>
+    _is(_)
+      ? /**/
+        //@ts-ignore
+        (_.handled = true)
+      : false
   create.is = is
 
   const _do: ActionCtx<P, R>['do'] = (_: Action<any, any>, handler) => {

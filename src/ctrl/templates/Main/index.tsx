@@ -6,11 +6,9 @@ import { ProjectViewCtrl } from 'ctrl/Views/Project'
 
 export interface MainCtrl {}
 export const MainCtrl: FC<MainCtrl> = () => {
-  const {
-    project: { current }
-  } = useStickeryState()
+  const { project } = useStickeryState()
   const props = useMemo<Main>(() => {
-    if (current) {
+    if (project) {
       return {
         ProjectComp: () => <ProjectViewCtrl />,
         view: MainView.Project
@@ -21,6 +19,6 @@ export const MainCtrl: FC<MainCtrl> = () => {
         view: MainView.NewProject
       }
     }
-  }, [current])
+  }, [project])
   return <Main {...props} />
 }
