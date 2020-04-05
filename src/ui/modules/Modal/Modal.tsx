@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, useRef, useEffect, useCallback } from 'react'
-import { useNavStack } from '../../../lib/hook/useNavStack'
+import { useNavStack } from 'lib/hook/useNavStack'
 
 export interface Modal {
   onClickOut(): unknown

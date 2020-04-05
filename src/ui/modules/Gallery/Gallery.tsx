@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC } from 'react'
-import { Button } from 'ui/elements/button'
+import { Button } from 'ui/elements/button/Button'
 import { ComponentArray } from '@types'
 
 export interface Gallery {

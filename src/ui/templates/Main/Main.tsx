@@ -19,25 +19,18 @@ export const Main: FC<Main> = (props) => {
   return (
     <div style={outerStyle}>
       {props.view === MainView.Project ? (
-        <div style={projectStyle}>
-          <props.ProjectComp />
-        </div>
+        <props.ProjectComp />
       ) : props.view === MainView.NewProject ? (
-        <div style={projectStyle}>
-          <props.NewProjectComp />
-        </div>
+        <props.NewProjectComp />
       ) : null}
     </div>
   )
 }
 const outerStyle: CSSProperties = {
-  height: '100%',
-  width: '100%'
-}
-const projectStyle: CSSProperties = {
   position: 'absolute',
   left: 0,
   bottom: 0,
   top: 0,
-  right: 0
+  right: 0,
+  overflow: 'hidden'
 }

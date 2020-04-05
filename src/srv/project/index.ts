@@ -1,6 +1,7 @@
 import { actionCtx } from 'lib/Actions'
 import { Reducer, useMemo, useReducer } from 'react'
-import { ProjectData } from 'srv/@types/data'
+import { ProjectData, ImageFileMeta } from 'srv/@types/data'
+import { mockImageFileMeta } from 'srv/mock/imageData'
 
 export type ProjectObject = Object
 
@@ -9,14 +10,22 @@ export type ProjectWorkbenchState = ProjectWorkbench | null
 
 export type PrjReducer = Reducer<ProjectWorkbenchState | null, any>
 
-const cmd_prj_set_background = actionCtx<string>('cmd_prj_set_background')
+const cmd_prj_set_background = actionCtx<ImageFileMeta>('cmd_prj_set_background')
 const cmd_prj_add_object = actionCtx<ProjectObject>('cmd_prj_add_object')
 
 export const cmd_prj_new_project = actionCtx<Pick<ProjectData, 'name' | 'background'>>(
   'cmd_prj_new_project'
 )
 
-const initialState: ProjectWorkbenchState = null
+// const initialState: ProjectWorkbenchState = null
+const initialState: ProjectWorkbenchState = {
+  background: mockImageFileMeta({
+    width: Math.ceil(Math.random() * 1000 + 200),
+    height: Math.ceil(Math.random() * 1000 + 200)
+  }),
+  name: '',
+  objects: []
+}
 export const reducer: PrjReducer = (prev, action) => {
   if (cmd_prj_new_project.is(action)) {
     return {

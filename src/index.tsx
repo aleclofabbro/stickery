@@ -1,4 +1,4 @@
-import { MainCtrl } from 'ctrl/templates/Main'
+import { MainCtrl } from 'ui/templates/Main/MainCtrl'
 import { ProvideMiddleware } from 'lib/Actions/provideDispatcher'
 import React, { FC } from 'react'
 import ReactDOM from 'react-dom'

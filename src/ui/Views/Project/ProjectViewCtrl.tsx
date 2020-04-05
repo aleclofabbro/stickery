@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react'
 import { useStickeryState } from 'srv'
-import { ProjectView } from 'ui/Views/Project'
+import { ProjectView } from '.'
 
 export interface ProjectViewCtrl {}
 export const ProjectViewCtrl: FC<ProjectViewCtrl> = () => {

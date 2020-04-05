@@ -3,9 +3,9 @@ import { useActionDispatch } from 'lib/Actions'
 import { useFileChooser } from 'lib/hook/useFileChooser'
 import React, { FC, useMemo } from 'react'
 import { useStickeryState } from 'srv'
-import { cmd_imagedb_import_image_file } from 'srv/images'
-import { Gallery, GalleryItem } from 'ui/modules/Gallery'
 import { ImageFileMeta } from 'srv/@types/data'
+import { cmd_imagedb_import_image_file } from 'srv/images'
+import { Gallery, GalleryItem } from '.'
 
 export interface GalleryCtrl {
   clickImage(_: ImageFileMeta): unknown

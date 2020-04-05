@@ -1,17 +1,21 @@
 export interface ImageFileData {
   src: string
+  size: number
   blob: Blob
 }
 export interface ProjectData {
   name: string
-  background: string
+  background: ImageFileMeta
   objects: ProjectObject[]
 }
 
-export interface ImageFileMeta {
+export interface Dimensions {
+  width: number
+  height: number
+}
+export interface ImageFileMeta extends Dimensions {
   name: string
   type: string
-  size: number
   lastModified: number
   src: string
 }

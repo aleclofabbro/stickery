@@ -9,33 +9,44 @@ export const createId = () =>
 export const getImageSrcUrl = (name: string, id: string) => `/_/images/${id}/${name}`
 export const createImageSrcUrl = (name: string) => getImageSrcUrl(name, createId())
 
-export async function getImageFileData(file: File): Promise<ImageFileData> {
-  const { name } = file
-  const src = createImageSrcUrl(name)
+export async function getImageFileData(file: File, src: string): Promise<ImageFileData> {
+  const { size } = file
   // @ts-ignore
   const blob: Blob = await file.arrayBuffer()
   const imgData: ImageFileData = {
     blob,
-    src
+    src,
+    size
   }
   return imgData
 }
 
-export function getImageFileMeta(file: File, src: string): ImageFileMeta {
-  const { name, size, lastModified, type } = file
-  const imgMeta: ImageFileMeta = {
-    size,
-    lastModified,
-    name,
-    type,
-    src
-  }
-  return imgMeta
+export async function getImageFileMeta(file: File, src: string): Promise<ImageFileMeta> {
+  return new Promise((resolve, reject) => {
+    const { name, lastModified, type } = file
+    var url = URL.createObjectURL(file)
+    var img = new Image()
+
+    img.onload = () => {
+      const imgMeta: ImageFileMeta = {
+        height: img.height,
+        width: img.width,
+        lastModified,
+        name,
+        type,
+        src
+      }
+      resolve(imgMeta)
+    }
+
+    img.src = url
+  })
 }
 
 export async function importImageFile(db: StickeryDB, file: File) {
-  const imageData = await getImageFileData(file)
-  const imageMeta = getImageFileMeta(file, imageData.src)
+  const src = createImageSrcUrl(file.name)
+  const imageMeta = await getImageFileMeta(file, src)
+  const imageData = await getImageFileData(file, src)
   return Promise.all([db.imageData.add(imageData), db.imageMeta.add(imageMeta)]).then(() => ({
     imageData,
     imageMeta
