@@ -1,17 +1,25 @@
-import React from 'react'
+import { MainCtrl } from 'ui/templates/Main/MainCtrl'
+import { ProvideMiddleware } from 'lib/Actions/provideDispatcher'
+import React, { FC } from 'react'
 import ReactDOM from 'react-dom'
+import { ProvideStickeryServices, useCreateStickeryServices } from 'srv'
 import './index.css'
-import { App } from './hoc/App'
-import { GlobCtx } from './ctx/globs'
 // import { defineCustomElements } from '@ionic/pwa-elements/loader'
 // import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(
-  <GlobCtx>
-    <App />
-  </GlobCtx>,
-  document.getElementById('root')
-)
+const Main: FC = () => {
+  const srvcs = useCreateStickeryServices()
+
+  return (
+    <ProvideMiddleware mw={srvcs.mw}>
+      <ProvideStickeryServices srvcs={srvcs}>
+        <MainCtrl />
+      </ProvideStickeryServices>
+    </ProvideMiddleware>
+  )
+}
+
+ReactDOM.render(<Main />, document.getElementById('root'))
 
 // defineCustomElements(window)
 

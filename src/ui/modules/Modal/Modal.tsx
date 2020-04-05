@@ -1,10 +1,10 @@
-import React, { CSSProperties, SFC, useRef, useEffect, useCallback } from 'react'
-import { useNavStack } from '../../../lib/hook/useNavStack'
+import React, { CSSProperties, FC, useRef, useEffect, useCallback } from 'react'
+import { useNavStack } from 'lib/hook/useNavStack'
 
 export interface Modal {
   onClickOut(): unknown
 }
-export const Modal: SFC<Modal> = ({ onClickOut, children }) => {
+export const Modal: FC<Modal> = ({ onClickOut, children }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const Modal: SFC<Modal> = ({ onClickOut, children }) => {
         return
       } else {
         back()
-        onClickOut()
+        onClickOut() //FIXME: si può togliere ? back() richiama anche onClickOut()?
       }
     },
     [onClickOut, back]
