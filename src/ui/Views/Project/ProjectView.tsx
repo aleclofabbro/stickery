@@ -9,7 +9,7 @@ export interface ProjectView {
 }
 export const ProjectView: FC<ProjectView> = ({ background, Objects }) => {
   const bgRef = useRef<HTMLImageElement | null>(null)
-  useTransform(bgRef)
+  const [, TransformCtx] = useTransform(bgRef)
   const dimensions = useFitInWindowDim(background)
   const containerStyle = useMemo<CSSProperties>(
     () => ({
@@ -21,11 +21,13 @@ export const ProjectView: FC<ProjectView> = ({ background, Objects }) => {
     [background, dimensions]
   )
   return (
-    <div ref={bgRef} style={containerStyle}>
-      {Objects.map(([key, Obj]) => (
-        <Obj key={key} />
-      ))}
-    </div>
+    <TransformCtx>
+      <div ref={bgRef} style={containerStyle}>
+        {Objects.map(([key, Obj]) => (
+          <Obj key={key} />
+        ))}
+      </div>
+    </TransformCtx>
   )
 }
 
@@ -38,7 +40,8 @@ const _containerStyle: CSSProperties = {
   left: 0,
   bottom: 0,
   top: 0,
-  right: 0
+  right: 0,
+  overflow: 'hidden'
 }
 
 export const useFitInWindowDim = (dim: Dimensions, scale = 1) =>
