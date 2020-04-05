@@ -1,9 +1,7 @@
 import { actionCtx } from 'lib/Actions'
 import { Reducer, useMemo, useReducer } from 'react'
-import { ProjectData, ImageFileMeta } from 'srv/@types/data'
+import { ProjectData, ImageFileMeta, ProjectObject } from 'srv/@types/data'
 import { mockImageFileMeta } from 'srv/mock/imageData'
-
-export type ProjectObject = Object
 
 export interface ProjectWorkbench extends ProjectData {}
 export type ProjectWorkbenchState = ProjectWorkbench | null
@@ -24,7 +22,14 @@ const initialState: ProjectWorkbenchState = {
     height: Math.ceil(Math.random() * 1000 + 200)
   }),
   name: '',
-  objects: []
+  objects: [
+    {
+      image: mockImageFileMeta({
+        width: Math.ceil(Math.random() * 200 + 200),
+        height: Math.ceil(Math.random() * 200 + 200)
+      })
+    }
+  ]
 }
 export const reducer: PrjReducer = (prev, action) => {
   if (cmd_prj_new_project.is(action)) {

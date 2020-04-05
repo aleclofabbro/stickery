@@ -5,7 +5,7 @@ export type Transforms = {
   size: Size
   pos: Position
 }
-
+let X = false
 type Size = number
 interface Position {
   x: number
@@ -32,7 +32,11 @@ export function useTransform(elemRef: MutableRefObject<HTMLElement | null>) {
     }
 
     mc.add(new Hammer.Pinch({ event: 'pinch' }))
-    mc.on('pinchstart', () => {
+    mc.on('pinchstart', (ev) => {
+      if (X) {
+        return
+      }
+      X = true
       const basePos = {
         x: posRef.current.x * sizeRef.current,
         y: posRef.current.y * sizeRef.current
@@ -51,13 +55,18 @@ export function useTransform(elemRef: MutableRefObject<HTMLElement | null>) {
         setPos(posRef.current)
         mc.off('pinchend', pinchend)
         mc.off('pinch', pinch)
+        X = false
       }
       mc.on('pinchend', pinchend)
       mc.on('pinch', pinch)
     })
 
-    mc.add(new Hammer.Pan({ event: 'pan' }))
-    mc.on('panstart', () => {
+    mc.add(new Hammer.Pan({ event: 'pan', interval: 1000 }))
+    mc.on('panstart', (ev) => {
+      if (X) {
+        return
+      }
+      X = true
       const basePos = {
         x: posRef.current.x, // sizeRef.current,
         y: posRef.current.y // sizeRef.current
@@ -77,6 +86,7 @@ export function useTransform(elemRef: MutableRefObject<HTMLElement | null>) {
         mc.off('pan', pan)
         mc.off('panend', panend)
         setPos(posRef.current)
+        X = false
       }
 
       mc.on('panend', panend)
@@ -89,7 +99,7 @@ export function useTransform(elemRef: MutableRefObject<HTMLElement | null>) {
     if (!elemRef.current) {
       return
     }
-    const _mc = new Hammer.Manager(elemRef.current)
+    const _mc = new Hammer.Manager(elemRef.current, { domEvents: true })
     setMc(_mc)
     return () => {
       setup.current = false

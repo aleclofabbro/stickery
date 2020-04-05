@@ -1,1 +1,1 @@
-export type ComponentArray = [string | number, ComponentType][]
+export type ComponentArray<T = any> = [string | number, ComponentType<T>][]

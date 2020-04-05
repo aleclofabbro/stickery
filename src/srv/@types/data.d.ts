@@ -3,6 +3,10 @@ export interface ImageFileData {
   size: number
   blob: Blob
 }
+export type ProjectObject = {
+  image: ImageFileMeta
+}
+
 export interface ProjectData {
   name: string
   background: ImageFileMeta
