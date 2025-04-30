@@ -1,8 +1,3 @@
-Perfect — I’ll start by drafting the full document outline in Markdown, using chapter-based structure with embedded Mermaid diagrams where relevant.
-
-Here’s the outline I propose for the architecture document:
-
-```markdown
 # Commercial Extensions Platform — Clean Architecture Design
 
 ## Overview
@@ -134,6 +129,3 @@ sequenceDiagram
 - Glossary of terms
 - Message and type examples
 - Reference links
-```
-
-Would you like to approve or tweak this outline before I begin writing the first chapter (Overview)?
